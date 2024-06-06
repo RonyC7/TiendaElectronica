@@ -1,0 +1,97 @@
+﻿@page "/dispositivos"
+
+@using TiendaElectronica.Clases
+
+<h3>Agregar Dispositivo</h3>
+
+<div>
+    <label for="numeroDeSerie">Número de Serie:</label>
+    <input id="numeroDeSerie" @bind="nuevoDispositivo.NumeroDeSerie" />
+</div>
+<div>
+    <label for="marca">Marca:</label>
+    <input id="marca" @bind="nuevoDispositivo.Marca" />
+</div>
+<div>
+    <label for="modelo">Modelo:</label>
+    <input id="modelo" @bind="nuevoDispositivo.Modelo" />
+</div>
+
+<div>
+    <label for="tipo">Tipo de Dispositivo:</label>
+    <select id="tipo" @onchange="CambiarTipoDispositivo">
+        <option value="">Seleccione...</option>
+        <option value="Laptop">Laptop</option>
+        <option value="Smartphone">Smartphone</option>
+        <option value="Tablet">Tablet</option>
+    </select>
+</div>
+
+@if (tipoSeleccionado == "Laptop" && nuevoDispositivo is Laptop laptop)
+{
+    <div>
+        <label for="memoriaRAM">Memoria RAM (GB):</label>
+        <input id="memoriaRAM" @bind="laptop.MemoriaRAM" type="number" />
+    </div>
+    <div>
+        <label for="almacenamiento">Almacenamiento (GB):</label>
+        <input id="almacenamiento" @bind="laptop.Almacenamiento" type="number" />
+    </div>
+}
+else if (tipoSeleccionado == "Smartphone" && nuevoDispositivo is Smartphone smartphone)
+{
+    <div>
+        <label for="sistemaOperativo">Sistema Operativo:</label>
+        <input id="sistemaOperativo" @bind="smartphone.SistemaOperativo" />
+    </div>
+    <div>
+        <label for="numeroDeCamaras">Número de Cámaras:</label>
+        <input id="numeroDeCamaras" @bind="smartphone.NumeroDeCamaras" type="number" />
+    </div>
+}
+else if (tipoSeleccionado == "Tablet" && nuevoDispositivo is Tablet tablet)
+{
+    <div>
+        <label for="tamanoDePantalla">Tamaño de Pantalla (pulgadas):</label>
+        <input id="tamanoDePantalla" @bind="tablet.TamañoDePantalla" type="number" step="0.1" />
+    </div>
+    <div>
+        <label for="soporteParaStylus">Soporte para Stylus:</label>
+        <input id="soporteParaStylus" type="checkbox" @bind="tablet.SoporteParaStylus" />
+    </div>
+}
+
+<div>
+    <button @onclick="GuardarDispositivo">Guardar</button>
+</div>
+
+@code {
+    private Dispositivo nuevoDispositivo = new Laptop(); // Inicializar con un tipo predeterminado
+    private string tipoSeleccionado = string.Empty; // Inicializar con una cadena vacía
+
+    private void CambiarTipoDispositivo(ChangeEventArgs e)
+    {
+        tipoSeleccionado = e.Value.ToString();
+        switch (tipoSeleccionado)
+        {
+            case "Laptop":
+                nuevoDispositivo = new Laptop();
+                break;
+            case "Smartphone":
+                nuevoDispositivo = new Smartphone();
+                break;
+            case "Tablet":
+                nuevoDispositivo = new Tablet();
+                break;
+            default:
+                nuevoDispositivo = new Laptop();
+                break;
+        }
+    }
+
+    private void GuardarDispositivo()
+    {
+        // Aquí puedes agregar la lógica para guardar el dispositivo en una lista o en una base de datos
+        Console.WriteLine($"Dispositivo guardado: {nuevoDispositivo.NumeroDeSerie}, {nuevoDispositivo.Marca}, {nuevoDispositivo.Modelo}");
+    }
+}
