@@ -2,24 +2,24 @@
 
 @using TiendaElectronica.Clases
 
-<h3>Agregar Dispositivo</h3>
+<h3 class="mt-4">Agregar Dispositivo</h3>
 
-<div>
-    <label for="numeroDeSerie">Número de Serie:</label>
-    <input id="numeroDeSerie" @bind="nuevoDispositivo.NumeroDeSerie" />
+<div class="mb-3">
+    <label for="numeroDeSerie" class="form-label">Número de Serie:</label>
+    <input id="numeroDeSerie" class="form-control" @bind="nuevoDispositivo.NumeroDeSerie" />
 </div>
-<div>
-    <label for="marca">Marca:</label>
-    <input id="marca" @bind="nuevoDispositivo.Marca" />
+<div class="mb-3">
+    <label for="marca" class="form-label">Marca:</label>
+    <input id="marca" class="form-control" @bind="nuevoDispositivo.Marca" />
 </div>
-<div>
-    <label for="modelo">Modelo:</label>
-    <input id="modelo" @bind="nuevoDispositivo.Modelo" />
+<div class="mb-3">
+    <label for="modelo" class="form-label">Modelo:</label>
+    <input id="modelo" class="form-control" @bind="nuevoDispositivo.Modelo" />
 </div>
 
-<div>
-    <label for="tipo">Tipo de Dispositivo:</label>
-    <select id="tipo" @onchange="CambiarTipoDispositivo">
+<div class="mb-3">
+    <label for="tipo" class="form-label">Tipo de Dispositivo:</label>
+    <select id="tipo" class="form-select" @onchange="CambiarTipoDispositivo">
         <option value="">Seleccione...</option>
         <option value="Laptop">Laptop</option>
         <option value="Smartphone">Smartphone</option>
@@ -29,45 +29,87 @@
 
 @if (tipoSeleccionado == "Laptop" && nuevoDispositivo is Laptop laptop)
 {
-    <div>
-        <label for="memoriaRAM">Memoria RAM (GB):</label>
-        <input id="memoriaRAM" @bind="laptop.MemoriaRAM" type="number" />
+    <div class="mb-3">
+        <label for="memoriaRAM" class="form-label">Memoria RAM (GB):</label>
+        <input id="memoriaRAM" class="form-control" @bind="laptop.MemoriaRAM" type="number" />
     </div>
-    <div>
-        <label for="almacenamiento">Almacenamiento (GB):</label>
-        <input id="almacenamiento" @bind="laptop.Almacenamiento" type="number" />
+    <div class="mb-3">
+        <label for="almacenamiento" class="form-label">Almacenamiento (GB):</label>
+        <input id="almacenamiento" class="form-control" @bind="laptop.Almacenamiento" type="number" />
     </div>
 }
 else if (tipoSeleccionado == "Smartphone" && nuevoDispositivo is Smartphone smartphone)
 {
-    <div>
-        <label for="sistemaOperativo">Sistema Operativo:</label>
-        <input id="sistemaOperativo" @bind="smartphone.SistemaOperativo" />
+    <div class="mb-3">
+        <label for="sistemaOperativo" class="form-label">Sistema Operativo:</label>
+        <input id="sistemaOperativo" class="form-control" @bind="smartphone.SistemaOperativo" />
     </div>
-    <div>
-        <label for="numeroDeCamaras">Número de Cámaras:</label>
-        <input id="numeroDeCamaras" @bind="smartphone.NumeroDeCamaras" type="number" />
+    <div class="mb-3">
+        <label for="numeroDeCamaras" class="form-label">Número de Cámaras:</label>
+        <input id="numeroDeCamaras" class="form-control" @bind="smartphone.NumeroDeCamaras" type="number" />
     </div>
 }
 else if (tipoSeleccionado == "Tablet" && nuevoDispositivo is Tablet tablet)
 {
-    <div>
-        <label for="tamanoDePantalla">Tamaño de Pantalla (pulgadas):</label>
-        <input id="tamanoDePantalla" @bind="tablet.TamañoDePantalla" type="number" step="0.1" />
+    <div class="mb-3">
+        <label for="tamanoDePantalla" class="form-label">Tamaño de Pantalla (pulgadas):</label>
+        <input id="tamanoDePantalla" class="form-control" @bind="tablet.TamañoDePantalla" type="number" step="0.1" />
     </div>
-    <div>
-        <label for="soporteParaStylus">Soporte para Stylus:</label>
-        <input id="soporteParaStylus" type="checkbox" @bind="tablet.SoporteParaStylus" />
+    <div class="mb-3 form-check">
+        <input id="soporteParaStylus" class="form-check-input" type="checkbox" @bind="tablet.SoporteParaStylus" />
+        <label for="soporteParaStylus" class="form-check-label">Soporte para Stylus:</label>
     </div>
 }
 
-<div>
-    <button @onclick="GuardarDispositivo">Guardar</button>
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="GuardarDispositivo">Guardar</button>
 </div>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-success" role="alert">
+        @mensaje
+    </div>
+}
+
+<div class="mt-4">
+    <h4>Cantidad de Dispositivos: @dispositivos.Count</h4>
+</div>
+
+<table class="table table-striped table-hover mt-4">
+    <thead>
+        <tr>
+            <th>Número de Serie</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Tipo</th>
+            <th>Detalles</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dispositivo in dispositivos)
+        {
+            <tr>
+                <td>@dispositivo.NumeroDeSerie</td>
+                <td>@dispositivo.Marca</td>
+                <td>@dispositivo.Modelo</td>
+                <td>@(dispositivo.GetType().Name)</td>
+                <td>@DetallesDispositivo(dispositivo)</td>
+                <td>
+                    <button class="btn btn-warning btn-sm me-2" @onclick="() => EditarDispositivo(dispositivo)">Editar</button>
+                    <button class="btn btn-danger btn-sm" @onclick="() => EliminarDispositivo(dispositivo)">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
     private Dispositivo nuevoDispositivo = new Laptop(); // Inicializar con un tipo predeterminado
     private string tipoSeleccionado = string.Empty; // Inicializar con una cadena vacía
+    private List<Dispositivo> dispositivos = new List<Dispositivo>(); // Lista para almacenar los dispositivos
+    private string mensaje; // Variable para el mensaje de confirmación
 
     private void CambiarTipoDispositivo(ChangeEventArgs e)
     {
@@ -91,7 +133,40 @@ else if (tipoSeleccionado == "Tablet" && nuevoDispositivo is Tablet tablet)
 
     private void GuardarDispositivo()
     {
-        // Aquí puedes agregar la lógica para guardar el dispositivo en una lista o en una base de datos
-        Console.WriteLine($"Dispositivo guardado: {nuevoDispositivo.NumeroDeSerie}, {nuevoDispositivo.Marca}, {nuevoDispositivo.Modelo}");
+        if (!dispositivos.Contains(nuevoDispositivo))
+        {
+            dispositivos.Add(nuevoDispositivo);
+            mensaje = "Dispositivo guardado correctamente.";
+        }
+        else
+        {
+            mensaje = "Dispositivo actualizado correctamente.";
+        }
+
+        // Reset nuevoDispositivo para el próximo ingreso
+        CambiarTipoDispositivo(new ChangeEventArgs { Value = tipoSeleccionado });
+    }
+
+    private void EditarDispositivo(Dispositivo dispositivo)
+    {
+        nuevoDispositivo = dispositivo;
+        tipoSeleccionado = dispositivo.GetType().Name;
+    }
+
+    private void EliminarDispositivo(Dispositivo dispositivo)
+    {
+        dispositivos.Remove(dispositivo);
+        mensaje = "Dispositivo eliminado correctamente.";
+    }
+
+    private string DetallesDispositivo(Dispositivo dispositivo)
+    {
+        return dispositivo switch
+        {
+            Laptop laptop => $"RAM: {laptop.MemoriaRAM} GB, Almacenamiento: {laptop.Almacenamiento} GB",
+            Smartphone smartphone => $"Sistema Operativo: {smartphone.SistemaOperativo}, Cámaras: {smartphone.NumeroDeCamaras}",
+            Tablet tablet => $"Pantalla: {tablet.TamañoDePantalla} pulgadas, Stylus: {(tablet.SoporteParaStylus ? "Sí" : "No")}",
+            _ => "Detalles no disponibles"
+        };
     }
 }
